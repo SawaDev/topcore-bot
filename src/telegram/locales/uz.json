@@ -1,0 +1,43 @@
+{
+  "hello": "Assalom aleykum!",
+  "enter_message": "Ushbu bot orqali siz mol-mulk egalarining qarzdorliklari haqida ma'lumot (sms tarzida) jo'natishingiz mumkin!",
+  "navigation": {
+    "start": "Bo'limni tanlang",
+    "upload_file": "Faylni yuklash",
+    "inform_about_debt": "Qarzdorlarni ogohlantirish",
+    "black_list": "Qora ro'yxat",
+    "white_list": "Ochiq ro'yxat"
+  },
+  "upload_file": {
+    "message": "Iltimos, xlsx formatidagi faylni yuklang!",
+    "success": "Muvaffaqiyatli yuklandi!",
+    "error": "Faylni yuklashda xatolik yuz berdi!"
+  },
+  "inform_about_debt": {
+    "message": "Qarzdorlarni ogohlantirish boshlandi, iltimos, kuting!",
+    "success": "Barcha qarzdorlar muvaffaqiyatli ogohlantirildi!"
+  },
+  "black_list": {
+    "message": "Qora ro'yxatdagilar:"
+  },
+  "white_list": {
+    "message": "Ochiq ro'yxatdagilar:",
+    "add": "Qo'shish",
+    "remove": "O'chirish"
+  },
+  "add_white_list": {
+    "message": "Mijozni l/s raqamini kiriting:",
+    "success": "Muvaffaqiyatli qo'shildi!"
+  },
+  "remove_white_list": {
+    "message": "Mijozni l/s raqamini kiriting:",
+    "success": "Muvaffaqiyatli o'chirildi!"
+  },
+  "language": {
+    "message": "Tilni tanlang:",
+    "success": "Muvaffaqiyatli o'zgartirildi!"
+  },
+  "other": {
+    "back": "◀️ Ortga"
+  }
+}
