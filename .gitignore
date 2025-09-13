@@ -1,11 +1,7 @@
 /.idea
 /node_modules
-/dist/*
-/logs/error.log
-/logs/mindbox.error.log
-/logs/*.error.log
-/logs/combined.log
+dist
+logs
 .env
-package.json
 test-report.xml
 test
