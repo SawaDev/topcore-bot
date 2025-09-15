@@ -14,8 +14,17 @@
     "error": "Faylni yuklashda xatolik yuz berdi!"
   },
   "inform_about_debt": {
-    "message": "Qarzdorlarni ogohlantirish boshlandi, iltimos, kuting!",
-    "success": "Barcha qarzdorlar muvaffaqiyatli ogohlantirildi!"
+    "message": "Qarzdorlarni qay tarzda ogohlantirish kerak?",
+    "list_header": "Qarzdorlar ro'yxati (birinchi 50 ta):",
+    "no_debtors": "Qarzdor topilmadi.",
+    "one_by_one": "Birma bir",
+    "all_at_once": "Barchasiga",
+    "select_prompt": "Qarzdorlarning L/S raqamlarini yuboring (bo'shliq bilan ajrating).",
+    "none_selected": "Hech nima tanlanmadi. Qayta urinib ko'ring.",
+    "success": "{count} abonent(lar)ga xabar yuborildi.",
+    "sms1": "Hurmatli abonent, hisobingiz bo'yicha qarzdorlik mavjud.",
+    "sms2": "Iltimos, erta muddatda qarzdorlikni to'lang.",
+    "sms3": "Savollar bo'lsa, qo'llab-quvvatlash xizmatiga murojaat qiling."
   },
   "black_list": {
     "message": "Qora ro'yxatdagilar:"
@@ -23,15 +32,23 @@
   "white_list": {
     "message": "Ochiq ro'yxatdagilar:",
     "add": "Qo'shish",
-    "remove": "O'chirish"
+    "remove": "O'chirish",
+    "empty": "Ochiq ro'yxat bo'sh",
+    "current": "Hozirgi ochiq ro'yxat:"
   },
   "add_white_list": {
     "message": "Mijozni l/s raqamini kiriting:",
-    "success": "Muvaffaqiyatli qo'shildi!"
+    "success": "Muvaffaqiyatli qo'shildi!",
+    "invalid": "Noto'g'ri l/s raqam",
+    "not_found": "Mijoz topilmadi",
+    "already": "Mijoz allaqachon ochiq ro'yxatda"
   },
   "remove_white_list": {
     "message": "Mijozni l/s raqamini kiriting:",
-    "success": "Muvaffaqiyatli o'chirildi!"
+    "success": "Muvaffaqiyatli o'chirildi!",
+    "invalid": "Noto'g'ri l/s raqam",
+    "not_found": "Mijoz topilmadi",
+    "already_removed": "Mijoz allaqachon ochiq ro'yxatdan o'chirilgan"
   },
   "language": {
     "message": "Tilni tanlang:",

@@ -4,7 +4,9 @@ import axios from "axios"
 import * as XLSX from "xlsx"
 import fs from "fs"
 import path from "path"
-import { match } from "telegram/match/match"
+import {match} from "telegram/match/match"
+import {AbonentRow} from "telegram/types/UploadFile"
+import {db} from "db"
 
 const dataDir = path.join(__dirname, "../../../data")
 fs.mkdirSync(dataDir, {recursive: true})
@@ -34,15 +36,43 @@ uploadFileScene.on("document", async ctx => {
     // Convert to JSON
     const data = XLSX.utils.sheet_to_json(sheet)
 
-    const files = fs.readdirSync(dataDir).filter(f => f.endsWith(".json"))
-    const nextId = files.length + 1
-    const filePath = path.join(dataDir, `${nextId}.json`)
+    const rows = data.slice(1) as AbonentRow[]
 
-    // Save JSON to file
-    fs.writeFileSync(filePath, JSON.stringify(data, null, 2), "utf-8")
+    //extract prefix
+    const prefix = rows[0]["Номер кадастра"].split(":").slice(0, -1).join(":")
+
+    const [upload] = await db("uploads").insert({prefix}).returning("*")
+
+    for (const r of rows) {
+      const [abonent] = await db("abonents")
+        .insert({
+          upload_id: upload.id,
+          account_number: r["Л/С"],
+          cadastral_number: r["Номер кадастра"],
+          full_name: r["ФИО абонента"],
+          address: r["Адрес"],
+          area: r["Общая площадь"]
+        })
+        .onConflict(["account_number", "cadastral_number"])
+        .merge(["full_name", "address", "area"]) // do not touch phone here
+        .returning("*")
+
+      if (typeof r.phone !== "undefined" && r.phone !== abonent.phone) {
+        await db("abonents").where({id: abonent.id}).update({phone: r.phone})
+      }
+
+      await db("abonent_balances").insert({
+        abonent_id: abonent.id,
+        start_balance: r["Сальдо на начало периода"],
+        accrued: r["Начислено"],
+        paid: r["Всего оплачено"],
+        other_charges: r["Проче начисления(измененных салдо)"],
+        end_balance: r["Сальдо на конец периода"]
+      })
+    }
 
     await ctx.reply(ctx.i18n.t("upload_file.success"))
-    
+
     return ctx.scene.enter("navigation-scene")
   } catch (err) {
     console.error(err)

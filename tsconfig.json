@@ -16,10 +16,13 @@
     "skipLibCheck": true,
     "outDir": "dist",
     "paths": {
+      "db": [
+        "src/db"
+      ],
       "*": [
         "node_modules/*",
         "src/types/*",
-        "src/*",
+        "src/*"
       ]
     }
   },
@@ -29,7 +32,7 @@
     "src/**/*.tsx",
     "src/telegram/locales/*.json",
     "global.d.ts"
-  ],
+, "knexfile.js"  ],
   "typeRoots": [
     "telegram/types",
     "./node_modules/@types"

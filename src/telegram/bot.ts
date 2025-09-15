@@ -45,7 +45,7 @@ bot.start(async (ctx) => {
 
 bot.on("text", async (ctx) => {
     if (!ctx.scene.current) {
-        return ctx.scene.enter("branches-scene")
+        return ctx.scene.enter("navigation-scene")
     }
 })
 
