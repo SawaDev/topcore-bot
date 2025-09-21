@@ -18,6 +18,10 @@ removeWhiteListScene.hears(match("other.back"), async ctx => {
 
 removeWhiteListScene.on("text", async ctx => {
   const text = (ctx.message as any).text?.trim()
+  if (!text) return
+  if (text.startsWith("/")) {
+    return ctx.scene.enter("navigation-scene")
+  }
   const account = text?.replace(/\D/g, "")
   if (!account || account.length < 5) {
     return ctx.reply(ctx.i18n.t("remove_white_list.invalid"))
