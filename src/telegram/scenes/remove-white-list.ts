@@ -12,6 +12,10 @@ removeWhiteListScene.enter(async ctx => {
   )
 })
 
+removeWhiteListScene.hears(match("other.back"), async ctx => {
+  return ctx.scene.enter("navigation-scene")
+})
+
 removeWhiteListScene.on("text", async ctx => {
   const text = (ctx.message as any).text?.trim()
   const account = text?.replace(/\D/g, "")
@@ -31,9 +35,5 @@ removeWhiteListScene.on("text", async ctx => {
   await db("abonents").where({id: existing.id}).update({is_white_listed: false})
 
   await ctx.reply(ctx.i18n.t("remove_white_list.success"))
-  return ctx.scene.enter("navigation-scene")
-})
-
-removeWhiteListScene.hears(match("other.back"), async ctx => {
   return ctx.scene.enter("navigation-scene")
 })

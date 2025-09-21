@@ -12,6 +12,10 @@ addWhiteListScene.enter(async ctx => {
   )
 })
 
+addWhiteListScene.hears(match("other.back"), async ctx => {
+  return ctx.scene.enter("navigation-scene")
+})
+
 addWhiteListScene.on("text", async ctx => {
   const text = (ctx.message as any).text?.trim()
   const account = text?.replace(/\D/g, "")
@@ -31,9 +35,5 @@ addWhiteListScene.on("text", async ctx => {
   await db("abonents").where({id: existing.id}).update({is_white_listed: true})
 
   await ctx.reply(ctx.i18n.t("add_white_list.success"))
-  return ctx.scene.enter("navigation-scene")
-})
-
-addWhiteListScene.hears(match("other.back"), async ctx => {
   return ctx.scene.enter("navigation-scene")
 })
