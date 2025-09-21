@@ -1,8 +1,10 @@
 import {Markup, Scenes} from "telegraf"
 import {AppContext} from "telegram/types/session/AppContext"
 import {db} from "db"
-import {api} from "utils/api"
 import {match} from "telegram/match/match"
+import {chunk} from "utils/chunk"
+import {playMobileApi} from "utils/api"
+import moment from "moment"
 
 export const informAboutDebtScene = new Scenes.BaseScene<AppContext>("inform-about-debt-scene")
 
@@ -13,6 +15,7 @@ type Debtor = {
   phone: string | null
   area: number | null
   end_balance: string | number | null
+  address: string | null
 }
 
 async function getDebtors(): Promise<Debtor[]> {
@@ -23,21 +26,14 @@ async function getDebtors(): Promise<Debtor[]> {
 
   const rows: Debtor[] = await db
     .with("latest", latest)
-    .select(
-      "a.id",
-      "a.account_number",
-      "a.full_name",
-      "a.phone",
-      "a.area",
-      "lb.end_balance"
-    )
+    .select("a.id", "a.account_number", "a.full_name", "a.phone", "a.area", "lb.end_balance", "a.address")
     .from({a: "abonents"})
     .leftJoin({lt: "latest"}, "lt.abonent_id", "a.id")
     .leftJoin({lb: "abonent_balances"}, function () {
       this.on("lb.abonent_id", "=", "a.id").andOn("lb.created_at", "=", "lt.created_at")
     })
     .where("a.is_white_listed", false)
-    .whereRaw("(COALESCE(a.area, 0) * 3000) <= COALESCE(lb.end_balance::numeric, 0)")
+    .whereRaw("300000 <= COALESCE(lb.end_balance::numeric, 0)")
     .orderBy("a.account_number", "asc")
 
   return rows
@@ -45,21 +41,10 @@ async function getDebtors(): Promise<Debtor[]> {
 
 async function sendSms(to: string, text: string): Promise<void> {
   try {
-    await api.post("/sms/send", {to, text})
+    // await api.post("/sms/send", {to, text})
   } catch (e) {
     console.error("SMS send error", to, e)
   }
-}
-
-async function sendThreeMessages(phone: string, ctx: AppContext): Promise<void> {
-  const msgs = [
-    ctx.i18n.t("inform_about_debt.sms1"),
-    ctx.i18n.t("inform_about_debt.sms2"),
-    ctx.i18n.t("inform_about_debt.sms3")
-  ]
-  // for (const m of msgs) {
-  //   await sendSms(phone, m)
-  // }
 }
 
 informAboutDebtScene.enter(async ctx => {
@@ -74,7 +59,12 @@ informAboutDebtScene.enter(async ctx => {
   ;(ctx.session as any).debtors = debtors
 
   const header = ctx.i18n.t("inform_about_debt.list_header")
-  const lines = debtors.slice(0, 50).map(d => `L/S: ${d.account_number}${d.full_name ? ` — ${d.full_name}` : ""}${d.phone ? ` — ${d.phone}` : ""}`)
+  const lines = debtors
+    .slice(0, 50)
+    .map(
+      d =>
+        `L/S: ${d.account_number}${d.full_name ? ` — ${d.full_name}` : ""}${d.phone ? ` — ${d.phone}` : ""}`
+    )
   await ctx.reply([header, "", ...lines].join("\n"))
 
   await ctx.reply(
@@ -88,13 +78,39 @@ informAboutDebtScene.enter(async ctx => {
 
 informAboutDebtScene.hears(match("inform_about_debt.all_at_once"), async ctx => {
   const debtors: Debtor[] = ((ctx.session as any).debtors || []) as Debtor[]
+
   let sent = 0
+  let messages: any[] = []
+
   for (const d of debtors) {
-    if (!d.phone) {
-      continue
-    }
-    await sendThreeMessages(d.phone, ctx)
+    if (!d.phone) continue
     sent += 1
+    messages.push({
+      sms: {
+        content: {
+          text: ctx.i18n.t("inform_about_debt.sms1", {
+            full_name: d.full_name || "",
+            address: d.address || "",
+            account_number: d.account_number.toString(),
+            end_balance: d.end_balance?.toLocaleString("fr-FR")
+          })
+        },
+        originator: "3700"
+      },
+      recipient: d.phone,
+      "message-id": `${d.account_number}-${moment().format("YYYYMMDDHHmmss")}`
+    })
+  }
+
+  if (messages.length) {
+    const batches = chunk(messages, 30)
+    for (const batch of batches) {
+      try {
+        await playMobileApi.post("/broker-api/send-sms", {messages: batch})
+      } catch (error) {
+        console.error("SMS send error", error)
+      }
+    }
   }
 
   await ctx.reply(ctx.i18n.t("inform_about_debt.success", {count: String(sent)}))
@@ -133,10 +149,37 @@ informAboutDebtScene.on("text", async ctx => {
   }
 
   let sent = 0
+  let messages: any[] = []
+
   for (const d of chosen) {
     if (!d.phone) continue
-    await sendThreeMessages(d.phone, ctx)
     sent += 1
+    messages.push({
+      sms: {
+        content: {
+          text: ctx.i18n.t("inform_about_debt.sms1", {
+            full_name: d.full_name || "",
+            address: d.address || "",
+            account_number: d.account_number.toString(),
+            end_balance: d.end_balance?.toLocaleString("fr-FR")
+          })
+        },
+        originator: "3700"
+      },
+      recipient: d.phone,
+      "message-id": `${d.account_number}-${moment().format("YYYYMMDDHHmmss")}`
+    })
+  }
+
+  if (messages.length) {
+    const batches = chunk(messages, 30)
+    for (const batch of batches) {
+      try {
+        await playMobileApi.post("/broker-api/send-sms", {messages: batch})
+      } catch (error) {
+        console.error("SMS send error", error)
+      }
+    }
   }
 
   ;(ctx.session as any).debt_mode = undefined

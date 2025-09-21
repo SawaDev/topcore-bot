@@ -5,6 +5,7 @@
     "start": "Выберите раздел",
     "upload_file": "Загрузить файл",
     "inform_about_debt": "Оповестить о задолженности",
+    "search_abonent": "Поиск абонента",
     "black_list": "Чёрный список",
     "white_list": "Белый список"
   },
@@ -22,12 +23,17 @@
     "select_prompt": "Отправьте L/S номеров должников (через пробел).",
     "none_selected": "Ничего не выбрано. Попробуйте снова.",
     "success": "Сообщение отправлено {count} абонент(ам).",
-    "sms1": "Уважаемый абонент, по вашему счёту есть задолженность.",
-    "sms2": "Пожалуйста, погасите задолженность в ближайшее время.",
-    "sms3": "При вопросах обратитесь в службу поддержки."
+    "sms1": "YAKKASAROY PARVOZ KOMMUNAL SERVIS\nHurmatli {{full_name}}, {{address}} manzili bo‘yicha, shaxsiy hisob raqami №{{account_number}}, boshqaruvchi kompaniya xizmatlari uchun {{end_balance}} so‘m qarzdorlik mavjud. Iltimos, qarzni yaqin vaqt ichida to‘lab qo‘yishingizni so‘raymiz."
+  },
+  "search_abonent": {
+    "message": "Ищите абонента по L/S, имени, адресу или телефону:",
+    "empty": "Абоненты не найдены.",
+    "current": "Найденные абоненты:"
   },
   "black_list": {
-    "message": "Чёрный список:"
+    "message": "Чёрный список:",
+    "empty": "Чёрный список пуст",
+    "current": "Текущий чёрный список:"
   },
   "white_list": {
     "message": "Белый список:",

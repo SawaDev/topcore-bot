@@ -1,6 +1,6 @@
 import { cacheMessagesMiddleware } from "telegram/config/cache-messages/cache-messages.middleware"
 import { loggerState } from "telegram/config/logger.config"
-import { bot } from "telegram/config/telegraf.config"
+import { bot, telegramEnabled } from "telegram/config/telegraf.config"
 import { i18n } from "telegram/config/language/i18n.config"
 import { redisSession } from "telegram/config/redis/redis-session.config"
 import { scenesStage } from "telegram/config/scenes.config"
@@ -51,10 +51,17 @@ bot.on("text", async (ctx) => {
 
     // Запуск бота
     ; (async () => {
-        if (process.env.WEBHOOK_DOMAIN)
-            await bot.telegram.setWebhook(`${process.env.WEBHOOK_DOMAIN}${secretPath}`)
-        else
-            await bot.launch()
+        if (!telegramEnabled) {
+            return
+        }
+        try {
+            if (process.env.WEBHOOK_DOMAIN)
+                await bot.telegram.setWebhook(`${process.env.WEBHOOK_DOMAIN}${secretPath}`)
+            else
+                await bot.launch()
+        } catch (e) {
+            console.error("Telegram launch failed", e)
+        }
     })()
 
 // Вывод ошибки бота

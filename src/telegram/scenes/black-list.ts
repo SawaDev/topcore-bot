@@ -1,15 +1,41 @@
 import {Markup, Scenes} from "telegraf"
 import {AppContext} from "telegram/types/session/AppContext"
 import {match} from "telegram/match/match"
+import {db} from "db"
 
 export const blackListScene = new Scenes.BaseScene<AppContext>("black-list-scene")
 
 blackListScene.enter(async ctx => {
   await ctx.reply(ctx.i18n.t("black_list.message"), Markup.keyboard([[ctx.i18n.t("other.back")]]).resize())
 
-  await ctx.reply(
-    "Qora ro'yxatdagilar:\n\nMijoz 1:\nL/S: 1234567890\n\nMijoz 2:\nL/S: 1234567891\n\nMijoz 3:\nL/S: 1234567892"
+  const latest = db("abonent_balances")
+    .select("abonent_id")
+    .max({created_at: "created_at"})
+    .groupBy("abonent_id")
+
+  const rows = await db
+    .with("latest", latest)
+    .select("a.account_number", "a.full_name", "a.phone", "a.area", "lb.end_balance")
+    .from({a: "abonents"})
+    .leftJoin({lt: "latest"}, "lt.abonent_id", "a.id")
+    .leftJoin({lb: "abonent_balances"}, function () {
+      this.on("lb.abonent_id", "=", "a.id").andOn("lb.created_at", "=", "lt.created_at")
+    })
+    .whereRaw("(COALESCE(a.area, 0) * 3000 * 3) < COALESCE(lb.end_balance::numeric, 0)")
+    .orderBy("a.account_number", "asc")
+    .limit(100)
+
+  if (!rows.length) {
+    return ctx.reply(ctx.i18n.t("black_list.empty"))
+  }
+
+  const lines = rows.map(
+    r =>
+      `L/S: ${r.account_number}${r.full_name ? ` — ${r.full_name}` : ""}${r.phone ? ` — ${r.phone}` : ""} ${
+        r?.end_balance ? `\nAbonent qarzi: ${r.end_balance.toLocaleString("fr-FR")}` : ""
+      }`
   )
+  return ctx.reply([ctx.i18n.t("black_list.current"), "", ...lines].join("\n"))
 })
 
 blackListScene.hears(match("other.back"), async ctx => {

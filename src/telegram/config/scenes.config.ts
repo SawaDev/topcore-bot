@@ -7,6 +7,7 @@ import {blackListScene} from "telegram/scenes/black-list"
 import {whiteListScene} from "telegram/scenes/white-list"
 import {addWhiteListScene} from "telegram/scenes/add-white-list"
 import {removeWhiteListScene} from "telegram/scenes/remove-white-list"
+import { searchAbonentScene } from "telegram/scenes/search-abonent"
 
 // Функции сцены
 export const {enter, leave} = Scenes.Stage
@@ -19,7 +20,8 @@ export const scenesStage = new Scenes.Stage<AppContext>(
     blackListScene,
     whiteListScene,
     addWhiteListScene,
-    removeWhiteListScene
+    removeWhiteListScene,
+    searchAbonentScene
   ],
   {
     ttl: 7200

@@ -5,6 +5,7 @@
     "start": "Bo'limni tanlang",
     "upload_file": "Faylni yuklash",
     "inform_about_debt": "Qarzdorlarni ogohlantirish",
+    "search_abonent": "Abonentni qidirish",
     "black_list": "Qora ro'yxat",
     "white_list": "Ochiq ro'yxat"
   },
@@ -22,12 +23,17 @@
     "select_prompt": "Qarzdorlarning L/S raqamlarini yuboring (bo'shliq bilan ajrating).",
     "none_selected": "Hech nima tanlanmadi. Qayta urinib ko'ring.",
     "success": "{count} abonent(lar)ga xabar yuborildi.",
-    "sms1": "Hurmatli abonent, hisobingiz bo'yicha qarzdorlik mavjud.",
-    "sms2": "Iltimos, erta muddatda qarzdorlikni to'lang.",
-    "sms3": "Savollar bo'lsa, qo'llab-quvvatlash xizmatiga murojaat qiling."
+    "sms1": "YAKKASAROY PARVOZ KOMMUNAL SERVIS\nHurmatli {{full_name}}, {{address}} manzili bo‘yicha, shaxsiy hisob raqami №{{account_number}}, boshqaruvchi kompaniya xizmatlari uchun {{end_balance}} so‘m qarzdorlik mavjud. Iltimos, qarzni yaqin vaqt ichida to‘lab qo‘yishingizni so‘raymiz."
+  },
+  "search_abonent": {
+    "message": "Abonentni L/S raqami, ismi, manzili yoki telefon raqami orqali qidiring:",
+    "empty": "Abonent topilmadi.",
+    "current": "Hozirgi abonentlar:"
   },
   "black_list": {
-    "message": "Qora ro'yxatdagilar:"
+    "message": "Qora ro'yxatdagilar:",
+    "empty": "Qora ro'yxat bo'sh",
+    "current": "Hozirgi qora ro'yxat:"
   },
   "white_list": {
     "message": "Ochiq ro'yxatdagilar:",
