@@ -2,6 +2,7 @@ import {Markup, Scenes} from "telegraf"
 import {AppContext} from "telegram/types/session/AppContext"
 import {match} from "telegram/match/match"
 import {db} from "db"
+import {replyLong} from "telegram/utils/replyLong"
 
 export const whiteListScene = new Scenes.BaseScene<AppContext>("white-list-scene")
 
@@ -24,8 +25,8 @@ whiteListScene.enter(async ctx => {
     return ctx.reply(ctx.i18n.t("white_list.empty"))
   }
 
-  const lines = rows.map(r => `L/S: ${r.account_number}${r.full_name ? ` — ${r.full_name}` : ""}`)
-  return ctx.reply([ctx.i18n.t("white_list.current"), "", ...lines].join("\n"))
+  const lines = rows.map((r, index) => `${index + 1}. L/S: ${r.account_number}${r.full_name ? ` — ${r.full_name}` : ""}`)
+  return replyLong(ctx, [ctx.i18n.t("white_list.current"), "", ...lines].join("\n"))
 })
 
 whiteListScene.hears(match("white_list.add"), async ctx => {

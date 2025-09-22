@@ -2,6 +2,7 @@ import {Markup, Scenes} from "telegraf"
 import {AppContext} from "telegram/types/session/AppContext"
 import {match} from "telegram/match/match"
 import {db} from "db"
+import {replyLong} from "telegram/utils/replyLong"
 
 export const searchAbonentScene = new Scenes.BaseScene<AppContext>("search-abonent-scene")
 
@@ -69,9 +70,9 @@ searchAbonentScene.on("text", async ctx => {
   }
 
   const header = ctx.i18n.t("search_abonent.current")
-  const lines = rows.map(r => {
+  const lines = rows.map((r, index) => {
     const parts: string[] = []
-    parts.push(`L/S: ${r.account_number}${r.full_name ? ` — ${r.full_name}` : ""}`)
+    parts.push(`${index + 1}. L/S: ${r.account_number}${r.full_name ? ` — ${r.full_name}` : ""}`)
     if (r.phone) parts.push(`Tel: ${r.phone}`)
     if (r.address) parts.push(`Manzil: ${r.address}`)
     const bal =
@@ -85,5 +86,5 @@ searchAbonentScene.on("text", async ctx => {
     return parts.join("\n")
   })
 
-  return ctx.reply([header, ...lines].join("\n\n"))
+  return replyLong(ctx, [header, ...lines].join("\n\n"))
 })

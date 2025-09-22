@@ -2,6 +2,7 @@ import {Markup, Scenes} from "telegraf"
 import {AppContext} from "telegram/types/session/AppContext"
 import {match} from "telegram/match/match"
 import {db} from "db"
+import {replyLong} from "telegram/utils/replyLong"
 
 export const blackListScene = new Scenes.BaseScene<AppContext>("black-list-scene")
 
@@ -30,12 +31,12 @@ blackListScene.enter(async ctx => {
   }
 
   const lines = rows.map(
-    r =>
-      `L/S: ${r.account_number}${r.full_name ? ` — ${r.full_name}` : ""}${r.phone ? ` — ${r.phone}` : ""} ${
+    (r, index) =>
+      `${index + 1}. L/S: ${r.account_number}${r.full_name ? ` — ${r.full_name}` : ""}${r.phone ? ` — ${r.phone}` : ""} ${
         r?.end_balance ? `\nAbonent qarzi: ${r.end_balance.toLocaleString("fr-FR")}` : ""
       }`
   )
-  return ctx.reply([ctx.i18n.t("black_list.current"), "", ...lines].join("\n"))
+  return replyLong(ctx, [ctx.i18n.t("black_list.current"), "", ...lines].join("\n"))
 })
 
 blackListScene.hears(match("other.back"), async ctx => {

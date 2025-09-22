@@ -3,6 +3,7 @@ import {AppContext} from "telegram/types/session/AppContext"
 import {db} from "db"
 import {match} from "telegram/match/match"
 import {chunk} from "utils/chunk"
+import {replyLong} from "telegram/utils/replyLong"
 import {playMobileApi} from "utils/api"
 import moment from "moment"
 
@@ -65,7 +66,7 @@ informAboutDebtScene.enter(async ctx => {
       d =>
         `L/S: ${d.account_number}${d.full_name ? ` — ${d.full_name}` : ""}${d.phone ? ` — ${d.phone}` : ""}`
     )
-  await ctx.reply([header, "", ...lines].join("\n"))
+  await replyLong(ctx, [header, "", ...lines].join("\n"))
 
   await ctx.reply(
     ctx.i18n.t("inform_about_debt.message"),
