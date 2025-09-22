@@ -10,5 +10,5 @@ export interface AbonentRow {
   ["Всего оплачено"]: number;
   ["Проче начисления(измененных салдо)"]: number;
   ["Сальдо на конец периода"]: number;
-  phone?: string;
+  ["Контакты"]?: string;
 }

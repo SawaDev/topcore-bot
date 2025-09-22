@@ -57,8 +57,8 @@ uploadFileScene.on("document", async ctx => {
         .merge(["full_name", "address", "area"]) // do not touch phone here
         .returning("*")
 
-      if (typeof r.phone !== "undefined" && r.phone !== abonent.phone) {
-        await db("abonents").where({id: abonent.id}).update({phone: r.phone})
+      if (typeof r["Контакты"] !== "undefined" && r["Контакты"] !== abonent.phone) {
+        await db("abonents").where({id: abonent.id}).update({phone: r["Контакты"]})
       }
 
       await db("abonent_balances").insert({
