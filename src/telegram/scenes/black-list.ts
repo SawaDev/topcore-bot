@@ -32,9 +32,9 @@ blackListScene.enter(async ctx => {
 
   const lines = rows.map(
     (r, index) =>
-      `${index + 1}. L/S: ${r.account_number}${r.full_name ? ` — ${r.full_name}` : ""}${r.phone ? ` — ${r.phone}` : ""} ${
-        r?.end_balance ? `\nAbonent qarzi: ${r.end_balance.toLocaleString("fr-FR")}` : ""
-      }`
+      `${index + 1}. ${r.full_name}\nL/S: ${r.account_number}${r.phone ? `\nT/N: ${r.phone}` : ""}${
+        r.address ? `\nManzil: ${r.address}` : ""
+      } ${r?.end_balance ? `\nAbonent qarzi: ${r.end_balance.toLocaleString("fr-FR")}` : ""}`
   )
   return replyLong(ctx, [ctx.i18n.t("black_list.current"), "", ...lines].join("\n"))
 })

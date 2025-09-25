@@ -22,8 +22,8 @@
     "all_at_once": "Ко всем",
     "select_prompt": "Отправьте L/S номеров должников (через пробел).",
     "none_selected": "Ничего не выбрано. Попробуйте снова.",
-    "success": "Сообщение отправлено {count} абонент(ам).",
-    "sms1": "YAKKASAROY PARVOZ KOMMUNAL SERVIS\nHurmatli {{full_name}}, {{address}} manzili bo‘yicha, shaxsiy hisob raqami №{{account_number}}, boshqaruvchi kompaniya xizmatlari uchun {{end_balance}} so‘m qarzdorlik mavjud. Iltimos, qarzni yaqin vaqt ichida to‘lab qo‘yishingizni so‘raymiz."
+    "success": "Сообщение отправлено ${count} абонент(ам).",
+    "sms1": "O'zbegim BSK\nHurmatli ${full_name}, ${address} manzili bo‘yicha, shaxsiy hisob raqami ${account_number}, boshqaruvchi kompaniya xizmatlari uchun ${end_balance} so‘m qarzdorlik mavjud. Iltimos, qarzni yaqin vaqt ichida to‘lab qo‘yishingizni so‘raymiz."
   },
   "search_abonent": {
     "message": "Ищите абонента по L/S, имени, адресу или телефону:",

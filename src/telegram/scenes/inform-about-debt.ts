@@ -40,14 +40,6 @@ async function getDebtors(): Promise<Debtor[]> {
   return rows
 }
 
-async function sendSms(to: string, text: string): Promise<void> {
-  try {
-    // await api.post("/sms/send", {to, text})
-  } catch (e) {
-    console.error("SMS send error", to, e)
-  }
-}
-
 informAboutDebtScene.enter(async ctx => {
   const debtors = await getDebtors()
 
@@ -60,12 +52,12 @@ informAboutDebtScene.enter(async ctx => {
   ;(ctx.session as any).debtors = debtors
 
   const header = ctx.i18n.t("inform_about_debt.list_header")
-  const lines = debtors
-    .slice(0, 50)
-    .map(
-      d =>
-        `L/S: ${d.account_number}${d.full_name ? ` — ${d.full_name}` : ""}${d.phone ? ` — ${d.phone}` : ""}`
-    )
+  const lines = debtors.map(
+    (d, index) =>
+      `${index + 1}. ${d.full_name}\nL/S: ${d.account_number}${d.phone ? `\nT/N: ${d.phone}` : ""}${
+        d.address ? `\nManzil: ${d.address}` : ""
+      } ${d?.end_balance ? `\nAbonent qarzi: ${Number(d.end_balance)?.toLocaleString("fr-FR")}` : ""}`
+  )
   await replyLong(ctx, [header, "", ...lines].join("\n"))
 
   await ctx.reply(
@@ -93,7 +85,7 @@ informAboutDebtScene.hears(match("inform_about_debt.all_at_once"), async ctx => 
             full_name: d.full_name || "",
             address: d.address || "",
             account_number: d.account_number.toString(),
-            end_balance: d.end_balance?.toLocaleString("fr-FR")
+            end_balance: Number(d.end_balance)?.toLocaleString("fr-FR")
           })
         },
         originator: "3700"
@@ -109,7 +101,15 @@ informAboutDebtScene.hears(match("inform_about_debt.all_at_once"), async ctx => 
       try {
         await playMobileApi.post("/broker-api/send-sms", {messages: batch})
       } catch (error) {
-        console.error("SMS send error", error)
+        const anyErr: any = error
+        const status = anyErr?.response?.status
+        const data = anyErr?.response?.data
+        console.error("SMS send error", {
+          status,
+          data,
+          message: anyErr?.message,
+          batch
+        })
       }
     }
   }
@@ -162,7 +162,7 @@ informAboutDebtScene.on("text", async ctx => {
             full_name: d.full_name || "",
             address: d.address || "",
             account_number: d.account_number.toString(),
-            end_balance: d.end_balance?.toLocaleString("fr-FR")
+            end_balance: Number(d.end_balance)?.toLocaleString("fr-FR")
           })
         },
         originator: "3700"
@@ -178,7 +178,7 @@ informAboutDebtScene.on("text", async ctx => {
       try {
         await playMobileApi.post("/broker-api/send-sms", {messages: batch})
       } catch (error) {
-        console.error("SMS send error", error)
+        console.error("SMS send error", batch, error)
       }
     }
   }

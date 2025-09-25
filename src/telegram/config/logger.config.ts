@@ -33,9 +33,20 @@ export const logger = createLogger({
     ]
 })
 
-export const mindboxLogger = createLogger(createSettings("logs/mindbox.error.log"))
 export const expressLogger = createLogger(createSettings("logs/express.error.log"))
-export const ioLogger = createLogger(createSettings("logs/io.error.log"))
+
+export const playmobileLogger = createLogger({
+    level: "info",
+    format: combine(
+        timestamp({
+            format: "YYYY-MM-DD HH:mm:ss"
+        }),
+        prettyPrint()
+    ),
+    transports: [
+        new transports.File({filename: "logs/playmobile.log", level: "info"})
+    ]
+})
 
 export const loggerState = async (ctx, next) => {
     ctx.logger = async (e, ctx) => {
