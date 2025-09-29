@@ -23,7 +23,7 @@
     "select_prompt": "Qarzdorlarning L/S raqamlarini yuboring (bo'shliq bilan ajrating).",
     "none_selected": "Hech nima tanlanmadi. Qayta urinib ko'ring.",
     "success": "${count} abonent(lar)ga xabar yuborildi.",
-    "sms1": "O'zbegim BSK\nHurmatli ${full_name}, ${address} manzili bo‘yicha, shaxsiy hisob raqami ${account_number}, boshqaruvchi kompaniya xizmatlari uchun ${end_balance} so‘m qarzdorlik mavjud. Iltimos, qarzni yaqin vaqt ichida to‘lab qo‘yishingizni so‘raymiz."
+    "sms1": "O'zbegim BSK\nHurmatli ${full_name}, ${address} manzili bo‘yicha, shaxsiy hisob raqami ${account_number}, boshqaruvchi kompaniya xizmatlari uchun ${end_balance} so‘m qarzdorlik mavjud. Iltimos, qarzni yaqin vaqt ichida to‘lab qo‘yishingizni so‘raymiz. O'z vaqtida amalga oshirilgan to'lov SUDdagi ovoragarchiliklarning oldini oladi."
   },
   "search_abonent": {
     "message": "Abonentni L/S raqami, ismi, manzili yoki telefon raqami orqali qidiring:",
